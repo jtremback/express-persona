@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>navigator.id.get() example</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://login.persona.org/include.js"></script>
-    <script>
+!!! 5
+html
+  head
+    title navigator.id.get() example
+    link(rel='stylesheet', href='style.css')
+    script(src='https://login.persona.org/include.js')
+    script.
       document.addEventListener("DOMContentLoaded", function() {
+
         document.querySelector("#login").addEventListener("click", function() {
           navigator.id.get(function(assertion) {
             if (!assertion) {
@@ -15,12 +16,11 @@
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "/persona/verify", true);
             xhr.setRequestHeader("Content-Type", "application/json");
+
             xhr.addEventListener("loadend", function(e) {
               var data = JSON.parse(this.responseText);
               if (data && data.status === "okay") {
-                document.querySelector("#user").textContent = data.email;
-                document.querySelector("#login").disabled = "disabled";
-                document.querySelector("#logout").disabled = "";
+                window.location.reload();
               }
             }, false);
 
@@ -28,26 +28,39 @@
               assertion: assertion
             }));
           });
+
         }, false);
 
         document.querySelector("#logout").addEventListener("click", function() {
           var xhr = new XMLHttpRequest();
           xhr.open("POST", "/persona/logout", true);
+          
           xhr.addEventListener("loadend", function(e) {
-            document.querySelector("#user").textContent = "logged out";
-            document.querySelector("#login").disabled = "";
-            document.querySelector("#logout").disabled = "disabled";
+            window.location.reload();
           });
+
           xhr.send();
         }, false);
+
       }, false);
-    </script>
-  </head>
-  <body>
-    <h1>Using navigator.id.get()</h1>
-    <p>Current user is: <span id="user">logged out</span></p>
-    <button id="login">Login</button>
-    <button id="logout" disabled="disabled">Logout</button>
-    <p>Back to <a href="..">examples</a>
-  </body>
-</html>
+
+  body
+    h1 Using navigator.id.get()
+    p
+      | Current user is: 
+      span#user 
+        if email
+          | #{email}
+        else 
+          | Not logged in.
+
+    if email    
+      button#login(disabled='disabled') Login
+      button#logout Logout
+    else
+      button#login Login
+      button#logout(disabled='disabled') Logout
+
+    p
+      | Back to 
+      a(href='..') examples

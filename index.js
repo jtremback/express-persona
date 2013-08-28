@@ -35,6 +35,7 @@ var defaultOptions = {
 module.exports = function(app, options) {
   options = options || {};
 
+  //Load option or defaults
   var personaOpts = {};
   Object.keys(defaultOptions).forEach(function(key) {
     if (typeof options[key] === typeof defaultOptions[key]) {
